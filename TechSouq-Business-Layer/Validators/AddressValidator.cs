@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TechSouq.Domain.Entities;
+using FluentValidation;
+using TechSouq.Application.Dtos;
+
+namespace TechSouq.Application.Validators
+{
+
+   
+
+    public class AddressValidator: AbstractValidator<AddressDto>
+    {
+        public AddressValidator()
+        {
+            RuleFor(x => x.Street)
+                .NotEmpty().WithMessage("Street Should Not Empty");
+
+            RuleFor(x => x.City)
+                .NotEmpty().WithMessage("City Should Not Empty");
+
+            RuleFor(x => x.UserId)
+                .NotNull().WithMessage("UserId is required");
+        }
+        
+
+
+
+    }
+}

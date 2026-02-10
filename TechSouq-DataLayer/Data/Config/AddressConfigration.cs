@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TechSouq_DataLayer.Models;
+using TechSouq.Domain.Entities;
 
-namespace TechSouq_DataLayer.Data.Config
+namespace TechSouq.Infrastructure.Data.Config
 {
     public class AddressConfigration : IEntityTypeConfiguration<Address>
     {
@@ -21,6 +21,10 @@ namespace TechSouq_DataLayer.Data.Config
             builder.Property(x => x.Street).HasColumnType("NVARCHAR(250)").IsRequired();
 
             builder.Property(x => x.City).HasColumnType("NVARCHAR(100)").IsRequired();
+
+            builder.Property(x => x.Phone).HasColumnType("NVARCHAR(11)").IsRequired();
+
+            builder.Property(x => x.UserId).IsRequired();
 
             builder.HasOne(x => x.User).WithMany(x => x.Addresses).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
 

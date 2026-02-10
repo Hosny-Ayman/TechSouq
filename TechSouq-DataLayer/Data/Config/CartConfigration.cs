@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TechSouq_DataLayer.Models;
+using TechSouq.Domain.Entities;
 
-namespace TechSouq_DataLayer.Data.Config
+namespace TechSouq.Infrastructure.Data.Config
 {
     public class CartConfigration:IEntityTypeConfiguration<Cart>
     {
