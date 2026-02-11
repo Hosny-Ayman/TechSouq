@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>TechSouq_API</RootNamespace>
+    <RootNamespace>TechSouq.API</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TechSouq-Business-Layer\TechSouq.Application.csproj" />
     <ProjectReference Include="..\TechSouq-DataLayer\TechSouq.Infrastructure.csproj" />
-    <ProjectReference Include="..\TechSouq.Domian\TechSouq.Domian.csproj" />
+    <ProjectReference Include="..\TechSouq.Domian\TechSouq.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSouq.API", "..\TechSouq
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSouq.Application", "..\TechSouq-Business-Layer\TechSouq.Application.csproj", "{FB4A5194-B7A4-4CF8-AE0E-1A637A61723D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSouq.Domian", "..\TechSouq.Domian\TechSouq.Domian.csproj", "{76382C55-4FED-4134-8982-98BE0CA1CD39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSouq.Domain", "..\TechSouq.Domian\TechSouq.Domain.csproj", "{76382C55-4FED-4134-8982-98BE0CA1CD39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

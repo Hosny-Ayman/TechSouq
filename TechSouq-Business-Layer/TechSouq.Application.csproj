@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>TechSouq_Business_Layer</RootNamespace>
+    <RootNamespace>TechSouq.Application</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TechSouq-DataLayer\TechSouq.Infrastructure.csproj" />
+    <ProjectReference Include="..\TechSouq.Domian\TechSouq.Domain.csproj" />
   </ItemGroup>
 
 </Project>

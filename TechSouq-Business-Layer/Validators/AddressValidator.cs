@@ -24,6 +24,9 @@ namespace TechSouq.Application.Validators
 
             RuleFor(x => x.UserId)
                 .NotNull().WithMessage("UserId is required");
+
+            RuleFor(x => x.Phone)
+                .NotNull().MinimumLength(11).MaximumLength(11).WithMessage("Phone Must be Not Null Or Less Or More Then 11 Number");
         }
         
 

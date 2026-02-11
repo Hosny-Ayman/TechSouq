@@ -18,5 +18,7 @@ namespace TechSouq.Domain.Interfaces
 
         Task <bool> DeleteAddress(int AddresId);
 
+       
+
     }
 }
