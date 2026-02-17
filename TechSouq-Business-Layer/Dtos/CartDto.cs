@@ -1,4 +1,7 @@
-﻿namespace TechSouq.Application.Dtos
+﻿using TechSouq.Domain.Enums;
+
+
+namespace TechSouq.Application.Dtos
 {
     public class CartDto
     {
@@ -7,7 +10,7 @@
 
         public int UserId { get; set; }
        
-
+        public CartStatus Status { get; set; }
       
     }
 

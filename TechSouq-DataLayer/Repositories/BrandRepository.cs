@@ -22,7 +22,7 @@ namespace TechSouq.DataLayer.Repositories
 
         public async Task<int> CreateBrand(Brand brand)
         {
-            await _AppDbContext.Brands.AddAsync(brand);
+             _AppDbContext.Brands.Add(brand);
 
             await _AppDbContext.SaveChangesAsync();
 

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using TechSouq.Application;
 using TechSouq.Application.Dtos;
 using TechSouq.Application.Services;
-using TechSouq.Application;
 
 namespace TechSouq.API.Controllers
 {
@@ -10,65 +12,65 @@ namespace TechSouq.API.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ApiController]
-    public class AddressesController : ControllerBase
+    public class BrandsController : ControllerBase
     {
-        private readonly AddressService _addressService;
 
-        public AddressesController(AddressService AddressService)
+        private readonly BrandServices _brandService;
+
+        public BrandsController(BrandServices brandService)
         {
-            _addressService = AddressService;
+            _brandService = brandService;
         }
 
+
         [HttpPost("Create")]
-        public async Task <IActionResult> CreateAddress(AddressDto address)
+        public async Task <IActionResult> CreateBrand(BrandDto brand)
         {
-            var Result = await _addressService.CreateAddress(address);
+            var Result = await _brandService.CreateBrand(brand);
 
             return Ok(Result);
         }
 
         [HttpGet("Read")]
-        public async Task <IActionResult> ReadAddresses(int UserId)
+        public async Task<IActionResult> ReadBrand(int BrandId)
         {
-            var Result = await  _addressService.ReadAddresses(UserId);
+            var Result = await _brandService.ReadBrand(BrandId);
 
             return Result.Status switch
             {
                 OperationStatus.Success => Ok(Result.Data),
-                OperationStatus.NotFound => NotFound(Result.Message)
+                OperationStatus.NotFound => BadRequest(Result.Message),
+                _ => StatusCode(500, "Unexpected Error")
+
             };
         }
-
 
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateAddress(AddressDto address)
+        public async Task<IActionResult> UpdateBrand(BrandDto Brand)
         {
-            var Result = await _addressService.UpdateAdress(address);
+            var Result = await _brandService.UpdateBrand(Brand);
 
             return Result.Status switch
             {
                 OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.NotFound => NotFound(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
-
-            };
-        }
-        [HttpDelete("Delete")]
-        public async Task <IActionResult> DeleteAddress(int AddressId)
-        {
-            var Result = await _addressService.DeleteAddress(AddressId);
-
-            return Result.Status switch
-            {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.NotFound => NotFound(Result.Message),
                 OperationStatus.Failed => BadRequest(Result.Message),
                 _ => StatusCode(500, "Unexpected Error")
-
             };
         }
 
 
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteBrand(int BrandId)
+        {
+            var Result = await _brandService.DeleteBrand(BrandId);
+
+            return Result.Status switch
+            {
+                OperationStatus.Success => Ok(Result.Message),
+                OperationStatus.Failed => BadRequest(Result.Message),
+                _ => StatusCode(500, "Unexpected Error")
+            };
+        }
 
     }
 }

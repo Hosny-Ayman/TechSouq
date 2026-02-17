@@ -8,12 +8,12 @@ using TechSouq.Application.Dtos;
 
 namespace TechSouq.Application.Validators
 {
-    public class brandValidator:AbstractValidator<BrandDto>
+    public class CartValidator : AbstractValidator<CartDto>
     {
-        public brandValidator ()
+        public CartValidator ()
         {
-            RuleFor(x => x.Name)
-                .NotEmpty().NotNull().WithMessage("Please Enter Name");
+            RuleFor(x => x.UserId)
+                .NotEmpty().NotNull().WithMessage("Must Have UserID");
         }
 
 

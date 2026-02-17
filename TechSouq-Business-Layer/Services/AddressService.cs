@@ -96,7 +96,7 @@ namespace TechSouq.Application.Services
             else
                 return new OperationResult<bool>
                 {
-                    Status = OperationStatus.Faild,
+                    Status = OperationStatus.Failed,
                      Message = "Update Failed"
                 };
         }
@@ -131,7 +131,7 @@ namespace TechSouq.Application.Services
                     return new OperationResult<bool>
                     {
                         Message = "Delete Failed",
-                        Status = OperationStatus.Faild,
+                        Status = OperationStatus.Failed,
 
                     };
                 }

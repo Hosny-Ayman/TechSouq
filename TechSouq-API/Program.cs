@@ -9,6 +9,9 @@ using TechSouq.Domain.Interfaces;
 using TechSouq.Infrastructure.Data;
 using TechSouq.Infrastructure.Repositories;
 using FluentValidation.AspNetCore;
+using TechSouq.Domian.Interfaces;
+using TechSouq.DataLayer.Repositories;
+using System.Text.Json.Serialization;
 
 
 
@@ -24,9 +27,20 @@ namespace TechSouq_API
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionString));
 
-            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+            builder.Services.AddControllers().AddJsonOptions(opetions =>
+            opetions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
             builder.Services.AddScoped<AddressService>();
+
+            builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+            builder.Services.AddScoped<BrandServices>();
+
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<CartServices>();
+
+            builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+            builder.Services.AddScoped<CartItemService>();
 
             // Add services to the container.
 
@@ -34,12 +48,16 @@ namespace TechSouq_API
 
             builder.Services.AddFluentValidationAutoValidation();
             //builder.Services.AddFluentValidationClientsideAdapters();
-            builder.Services.AddValidatorsFromAssemblyContaining<AddressValidator>();
 
+            builder.Services.AddValidatorsFromAssemblyContaining<AddressValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<brandValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<CartValidator>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAutoMapper(typeof(TechSouq.Application.Mappings.MappingProfiles));
 
             var app = builder.Build();
 

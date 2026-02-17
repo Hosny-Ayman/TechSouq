@@ -21,7 +21,7 @@ namespace TechSouq.Infrastructure.Repositories
 
         public async Task <int>  CreateAddress(Address address)
         {
-            await _Context.Addresses.AddAsync(address);
+             _Context.Addresses.Add(address);
 
             await _Context.SaveChangesAsync();
             

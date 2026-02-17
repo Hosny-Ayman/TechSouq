@@ -11,7 +11,8 @@ namespace TechSouq.Application
     {
         Success,
         NotFound,
-        Faild
+        Failed,
+        BadRequest
     }
 
     public class OperationResult<T>

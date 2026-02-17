@@ -1,4 +1,6 @@
-﻿namespace TechSouq.Domain.Entities
+﻿using TechSouq.Domain.Enums;
+
+namespace TechSouq.Domain.Entities
 {
     public class Cart
     {
@@ -7,6 +9,8 @@
 
         public int UserId { get; set; }
         public User User { get; set; }
+
+        public CartStatus Status { get; set; } = CartStatus.Active;
 
         public ICollection<CartItem> CartItems { get; set; }
     }
