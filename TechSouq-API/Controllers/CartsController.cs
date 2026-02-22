@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.NetworkInformation;
+using TechSouq.Application;
 using TechSouq.Application.Dtos;
 using TechSouq.Application.Services;
-using TechSouq.Application;
 
 namespace TechSouq.API.Controllers
 {
@@ -14,9 +15,9 @@ namespace TechSouq.API.Controllers
     public class CartsController : ControllerBase
     {
 
-        private readonly CartServices _CartServices;
+        private readonly CartService _CartServices;
 
-        public CartsController(CartServices cartServices)
+        public CartsController(CartService cartServices)
         {
             _CartServices = cartServices;
         }
@@ -25,21 +26,29 @@ namespace TechSouq.API.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> CreateCart(CartDto Cart)
         {
-            var Result = await _CartServices.CreateCart(Cart);
+            var result = await _CartServices.CreateCart(Cart);
 
-            return Ok(Result);
+            return result.Status switch
+            {
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
+
+            };
         }
 
         [HttpGet("Read")]
         public async Task<IActionResult> ReadCart(int CartId)
         {
-            var Result = await _CartServices.ReadCart(CartId);
+            var result = await _CartServices.ReadCart(CartId);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Data),
-                OperationStatus.NotFound => BadRequest(Result.Message),
-                //_ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
 
             };
         }
@@ -47,13 +56,14 @@ namespace TechSouq.API.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateCart(CartDto Cart)
         {
-            var Result = await _CartServices.UpdateCart(Cart);
+            var result = await _CartServices.UpdateCart(Cart);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.Failed => BadRequest(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
             };
         }
 
@@ -61,13 +71,14 @@ namespace TechSouq.API.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteCart(int CartId)
         {
-            var Result = await _CartServices.DeleteCart(CartId);
+            var result = await _CartServices.DeleteCart(CartId);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.Failed => BadRequest(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
             };
         }
 

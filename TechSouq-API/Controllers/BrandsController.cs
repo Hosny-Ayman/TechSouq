@@ -15,9 +15,9 @@ namespace TechSouq.API.Controllers
     public class BrandsController : ControllerBase
     {
 
-        private readonly BrandServices _brandService;
+        private readonly BrandService _brandService;
 
-        public BrandsController(BrandServices brandService)
+        public BrandsController(BrandService brandService)
         {
             _brandService = brandService;
         }
@@ -26,21 +26,29 @@ namespace TechSouq.API.Controllers
         [HttpPost("Create")]
         public async Task <IActionResult> CreateBrand(BrandDto brand)
         {
-            var Result = await _brandService.CreateBrand(brand);
+            var result = await _brandService.CreateBrand(brand);
 
-            return Ok(Result);
+            return result.Status switch
+            {
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
+
+            };
         }
 
         [HttpGet("Read")]
         public async Task<IActionResult> ReadBrand(int BrandId)
         {
-            var Result = await _brandService.ReadBrand(BrandId);
+            var result = await _brandService.ReadBrand(BrandId);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Data),
-                OperationStatus.NotFound => BadRequest(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
 
             };
         }
@@ -48,13 +56,14 @@ namespace TechSouq.API.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateBrand(BrandDto Brand)
         {
-            var Result = await _brandService.UpdateBrand(Brand);
+            var result = await _brandService.UpdateBrand(Brand);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.Failed => BadRequest(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
             };
         }
 
@@ -62,13 +71,14 @@ namespace TechSouq.API.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteBrand(int BrandId)
         {
-            var Result = await _brandService.DeleteBrand(BrandId);
+            var result = await _brandService.DeleteBrand(BrandId);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.Failed => BadRequest(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
             };
         }
 

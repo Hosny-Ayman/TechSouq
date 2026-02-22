@@ -14,6 +14,11 @@ namespace TechSouq.Application.Validators
         {
             RuleFor(x => x.UserId)
                 .NotEmpty().NotNull().WithMessage("Must Have UserID");
+
+            RuleFor(x => x.Status)
+                .IsInEnum()
+                .WithMessage("Invalid Cart Status");
+
         }
 
 

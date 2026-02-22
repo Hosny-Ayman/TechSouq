@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TechSouq.Application.Dtos;
 using TechSouq.Domain.Entities;
 using TechSouq.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace TechSouq.Application.Services
 {
@@ -14,11 +15,13 @@ namespace TechSouq.Application.Services
     {
         private readonly ICartItemRepository _CartItemRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<CartItemService> _logger;
 
-        public CartItemService(ICartItemRepository cartItemRepository , IMapper mapper)
+        public CartItemService(ICartItemRepository cartItemRepository , IMapper mapper, ILogger<CartItemService> Logger)
         {
             _CartItemRepository = cartItemRepository;
             _mapper = mapper;
+            _logger = Logger;
         }
 
         public async Task<OperationResult<int>> CreatCartItem(CartItemDto cartItemdto)
@@ -31,21 +34,16 @@ namespace TechSouq.Application.Services
             {
                 var newId = await _CartItemRepository.CreateCartItem(cartItem);
 
-                return new OperationResult<int>
-                {
-                    Data = newId,
-                    Status = OperationStatus.Success,
-                    Message = "Item added successfully"
-                };
+                _logger.LogInformation($"Item added Successfully. ProductId: ${cartItemdto.ProductId}");
+
+                return OperationResult<int>.Success(newId, $"Cart Items Added Successfully");
+               
             }
             catch (Exception ex)
             {
-                return new OperationResult<int>
-                {
-                    Data = 0,
-                    Status = OperationStatus.Failed,
-                    Message = $"Failed to add item: {ex.Message}" 
-                };
+                _logger.LogError(ex, $"Failed to add item. ProductId: {cartItemdto.ProductId}");
+
+                return OperationResult<int>.Failure($"Failed to add item. ProductId: {cartItemdto.ProductId}");
             }
            
         }
@@ -54,64 +52,57 @@ namespace TechSouq.Application.Services
         {
             if (CartId <= 0)
             {
-                return new OperationResult<List<CartItemDto>>
-                {
-                    Message = "CartId must be greater than 0",
-                    Status = OperationStatus.BadRequest,
-                   
-                };
+                return OperationResult<List<CartItemDto>>.BadRequest("Invalid Data", new List<string> { $"Invalid Cart ID: {CartId}" });
+
+                _logger.LogWarning($"User Try To Add CartId: {CartId}");
             }
           
-            var Result = await _CartItemRepository.ReadCartItems(CartId);
+            var result = await _CartItemRepository.ReadCartItems(CartId);
 
 
-            if (Result == null)
+            if (result == null || !result.Any())
             {
-                return new OperationResult<List<CartItemDto>>
-                {
-                    Message = "Cart not found",
-                    Status = OperationStatus.NotFound
-                };
+                return OperationResult<List<CartItemDto>>.NotFound("Cart not found");
+
+                _logger.LogWarning($"No Items Found With CartId: {CartId}");
+
             }
 
-            var mapped = Result.Select(x => new CartItemDto
-            {
-                Id = x.Id,
-                CartId = x.CartId,
-                ProductId = x.ProductId,
-                Quantity = x.Quantity
-            }).ToList();
+            var mapped = _mapper.Map<List<CartItemDto>>(result);
 
-            return new OperationResult<List<CartItemDto>>
-            {
-                Status = OperationStatus.Success,
-                Data = mapped
-            };
+            return OperationResult<List<CartItemDto>>.Success(mapped);
         }
 
-        public async Task<OperationResult< bool>> UpdateCartItems(List<CartItemDto> cartItem)
+        public async Task<OperationResult< bool>> UpdateCartItems(List<CartItemDto> cartItems)
         {
 
-            var ctList = cartItem.Select(item => new CartItem
+            if (cartItems == null || !cartItems.Any())
             {
-                Id = item.Id,
-                CartId = item.CartId,
-                ProductId = item.ProductId,
-                Quantity = item.Quantity
+                _logger.LogWarning("Update attempt with empty or null cart items list.");
+                return OperationResult<bool>.BadRequest("Update Failed Try Later");
+            }
 
-            }).ToList();
+            var ctList = _mapper.Map<List<CartItem>>(cartItems);
 
-            var Result = await _CartItemRepository.UpdateCartItems(ctList);
-
-
-            return new OperationResult<bool>
+            try
             {
-                Message = Result ? "Update Successfully" : "Update Failed",
-                Status = Result ? OperationStatus.Success : OperationStatus.Failed,
-                Data = Result
-            };
-           
-           
+                var result = await _CartItemRepository.UpdateCartItems(ctList);
+
+                _logger.LogInformation($"Successfully updated {ctList.Count} cart items.");
+
+                return OperationResult<bool>.Success(result);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to update {ctList.Count} cart items.");
+
+                return OperationResult<bool>.Failure("Update Failed Try Later");
+            }
+
+
+
+
         }
     }
 }

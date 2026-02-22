@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using TechSouq.Application;
 using TechSouq.Application.Dtos;
 using TechSouq.Application.Services;
-using TechSouq.Application;
 
 namespace TechSouq.API.Controllers
 {
@@ -22,20 +23,37 @@ namespace TechSouq.API.Controllers
         [HttpPost("Create")]
         public async Task <IActionResult> CreateAddress(AddressDto address)
         {
-            var Result = await _addressService.CreateAddress(address);
+            var result = await _addressService.CreateAddress(address);
 
-            return Ok(Result);
+            if(result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return result.Status switch
+            {
+               
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
+
+
+            };
+
+           
         }
 
         [HttpGet("Read")]
         public async Task <IActionResult> ReadAddresses(int UserId)
         {
-            var Result = await  _addressService.ReadAddresses(UserId);
+            var result = await  _addressService.ReadAddresses(UserId);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Data),
-                OperationStatus.NotFound => NotFound(Result.Message)
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
             };
         }
 
@@ -43,27 +61,28 @@ namespace TechSouq.API.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateAddress(AddressDto address)
         {
-            var Result = await _addressService.UpdateAdress(address);
+            var result = await _addressService.UpdateAdress(address);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.NotFound => NotFound(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
 
             };
         }
         [HttpDelete("Delete")]
         public async Task <IActionResult> DeleteAddress(int AddressId)
         {
-            var Result = await _addressService.DeleteAddress(AddressId);
+            var result = await _addressService.DeleteAddress(AddressId);
 
-            return Result.Status switch
+            return result.Status switch
             {
-                OperationStatus.Success => Ok(Result.Message),
-                OperationStatus.NotFound => NotFound(Result.Message),
-                OperationStatus.Failed => BadRequest(Result.Message),
-                _ => StatusCode(500, "Unexpected Error")
+                OperationStatus.Success => Ok(result),
+                OperationStatus.NotFound => NotFound(result),
+                OperationStatus.BadRequest => BadRequest(result),
+                _ => StatusCode(500, result)
 
             };
         }

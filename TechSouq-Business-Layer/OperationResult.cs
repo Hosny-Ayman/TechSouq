@@ -11,20 +11,51 @@ namespace TechSouq.Application
     {
         Success,
         NotFound,
-        Failed,
-        BadRequest
+        BadRequest,
+        ServerError,
+        Unauthorized
     }
 
     public class OperationResult<T>
     {
-        public OperationStatus Status { get; set; }
+        public OperationStatus Status { get; private set; }
 
-        public string Message { get; set; } 
+        public string Message { get; private set; } 
 
-        public T Data { get; set; }
+        public T Data { get; private set; }
 
-        public bool Success => Status == OperationStatus.Success;
+        public bool IsSuccess { get; private set; }
 
+        public List<string> Errors { get; private set; }
+
+        private OperationResult (bool isSuccess, T data, string message, OperationStatus status,List<string>errors )
+        {
+            IsSuccess = isSuccess;
+            Data = data;
+            Message = message;
+            Status = status;
+            Errors = errors ?? new List<string>();
+        }
+
+        public static OperationResult<T> Success(T data, string message = "Operation successful")
+        {
+            return new OperationResult<T>(true, data, message, OperationStatus.Success, null);
+        }
+
+        public static OperationResult<T> Failure(string message)
+        {
+            return new OperationResult<T>(false, default, message, OperationStatus.ServerError, null);
+        }
+
+        public static OperationResult<T> NotFound(string message)
+        {
+            return new OperationResult<T>(false, default, message, OperationStatus.NotFound, null);
+        }
+
+        public static OperationResult<T> BadRequest(string message,List<string>errors = null)
+        {
+            return new OperationResult<T>(false, default, message, OperationStatus.BadRequest, errors);
+        }
 
     }
 }
