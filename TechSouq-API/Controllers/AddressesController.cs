@@ -21,9 +21,9 @@ namespace TechSouq.API.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task <IActionResult> CreateAddress(AddressDto address)
+        public async Task <IActionResult> AddAddress(AddressDto address)
         {
-            var result = await _addressService.CreateAddress(address);
+            var result = await _addressService.AddAddress(address);
 
             if(result.IsSuccess)
             {
@@ -43,10 +43,10 @@ namespace TechSouq.API.Controllers
            
         }
 
-        [HttpGet("Read")]
-        public async Task <IActionResult> ReadAddresses(int UserId)
+        [HttpGet("Get")]
+        public async Task <IActionResult> GetAddresses(int UserId)
         {
-            var result = await  _addressService.ReadAddresses(UserId);
+            var result = await  _addressService.GetAddresses(UserId);
 
             return result.Status switch
             {

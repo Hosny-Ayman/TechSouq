@@ -33,14 +33,14 @@ namespace TechSouq_API
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .WriteTo.Console()
                 .WriteTo.File(
-                @"D:\TechSouqLogs\log-.txt",
+                @"D:\Programming 2026\TechSouq Project\TechSouqLogs\log-.txt",
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 30,
                 buffered: false)
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();
 
-            Log.Information("البرنامج بدأ بنجاح واللوجر شغال.");
+            Log.Information("Program Work Good");
 
             try
             {
@@ -65,7 +65,13 @@ namespace TechSouq_API
                             .Select(x => x.ErrorMessage)
                             .ToList();
 
+
+                        var logger = actionContext.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+
                        
+                        var path = actionContext.HttpContext.Request.Path;
+                        logger.LogWarning("Automatic Validation Failed at Endpoint: {Path}. Errors: {@Errors}", path, errors);
+
                         var operationResult = OperationResult<object>.BadRequest("Validation Error", errors);
 
                        

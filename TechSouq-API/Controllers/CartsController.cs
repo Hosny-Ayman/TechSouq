@@ -26,7 +26,7 @@ namespace TechSouq.API.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> CreateCart(CartDto Cart)
         {
-            var result = await _CartServices.CreateCart(Cart);
+            var result = await _CartServices.AddCart(Cart);
 
             return result.Status switch
             {
@@ -38,10 +38,10 @@ namespace TechSouq.API.Controllers
             };
         }
 
-        [HttpGet("Read")]
-        public async Task<IActionResult> ReadCart(int CartId)
+        [HttpGet("Get")]
+        public async Task<IActionResult> GetCart(int CartId)
         {
-            var result = await _CartServices.ReadCart(CartId);
+            var result = await _CartServices.GetCart(CartId);
 
             return result.Status switch
             {

@@ -20,7 +20,7 @@ namespace TechSouq.Infrastructure.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<int> CreateCart(Cart Cart)
+        public async Task<int> AddCart(Cart Cart)
         {
            _appDbContext.Carts.Add(Cart);
 
@@ -34,7 +34,7 @@ namespace TechSouq.Infrastructure.Repositories
            return await _appDbContext.Carts.Where(x => x.Id == CartId).ExecuteDeleteAsync() > 0;
         }
 
-        public async Task<Cart> ReadCart(int CartId)
+        public async Task<Cart> GetCart(int CartId)
         {
             return await _appDbContext.Carts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == CartId);
         }

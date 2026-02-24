@@ -9,9 +9,9 @@ namespace TechSouq.Domain.Interfaces
 {
     public interface ICartRepository
     {
-        Task<int> CreateCart(Cart Cart);
+        Task<int> AddCart(Cart Cart);
 
-        Task<Cart> ReadCart(int CartId);
+        Task<Cart> GetCart(int CartId);
 
         Task<bool> UpdateCart (Cart Cart);
 

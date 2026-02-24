@@ -22,14 +22,14 @@ namespace TechSouq.Application.Services
             _logger = logger;
         }
 
-        public async Task<OperationResult<int>> CreateAddress(AddressDto Address)
+        public async Task<OperationResult<int>> AddAddress(AddressDto Address)
         {
             var ad = _mapper.Map<Address>(Address);
             try
             {
                 _logger.LogInformation("Address Added Successfuly With Id {Id}",ad.Id);
 
-                var newId =  await _addressRepository.CreateAddress(ad);
+                var newId =  await _addressRepository.AddAddress(ad);
 
                 return OperationResult<int>.Success(newId);
             }
@@ -41,7 +41,7 @@ namespace TechSouq.Application.Services
             }
         }
 
-        public async Task<OperationResult<List<AddressDto>>> ReadAddresses(int userId)
+        public async Task<OperationResult<List<AddressDto>>> GetAddresses(int userId)
         {
             if(userId<=0)
             {
@@ -51,7 +51,7 @@ namespace TechSouq.Application.Services
 
             try
             {
-                var addresses = await _addressRepository.ReadAddresses(userId);
+                var addresses = await _addressRepository.GetAddresses(userId);
 
                 if(addresses==null || !addresses.Any())
                 {
@@ -62,14 +62,14 @@ namespace TechSouq.Application.Services
 
 
                 var addressesDto = _mapper.Map<List<AddressDto>>(addresses);
+
+                _logger.LogInformation("User Get Addresses: {@Addresses}", addresses);
                 return OperationResult<List<AddressDto>>.Success(addressesDto);
-
-
             }
 
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ReadAddresses Failed for UserId: {UserId}", userId);
+                _logger.LogError(ex, "GetAddresses Failed for UserId: {UserId}", userId);
                 return OperationResult<List<AddressDto>>.Failure("Addresses Read Failed. Try Later.");
             }
                 

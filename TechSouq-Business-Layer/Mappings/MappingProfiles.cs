@@ -19,6 +19,7 @@ namespace TechSouq.Application.Mappings
             CreateMap<AddressDto, Address>().ReverseMap();
             CreateMap<BrandDto, Brand>().ReverseMap();
             CreateMap<CartDto,Cart>().ReverseMap();
+            CreateMap<CategorieDto,Categorie>().ReverseMap();
         }
 
     }

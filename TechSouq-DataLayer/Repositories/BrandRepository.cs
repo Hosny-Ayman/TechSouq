@@ -20,7 +20,7 @@ namespace TechSouq.DataLayer.Repositories
             _AppDbContext = AppDbContext;
         }
 
-        public async Task<int> CreateBrand(Brand brand)
+        public async Task<int> AddBrand(Brand brand)
         {
              _AppDbContext.Brands.Add(brand);
 
@@ -35,7 +35,7 @@ namespace TechSouq.DataLayer.Repositories
 
         }
 
-        public async Task<Brand> ReadBrand(int BrandId)
+        public async Task<Brand> GetBrand(int BrandId)
         {
             return await _AppDbContext.Brands.AsNoTracking().FirstOrDefaultAsync(x => x.Id == BrandId);
         }

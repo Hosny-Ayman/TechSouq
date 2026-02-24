@@ -24,14 +24,14 @@ namespace TechSouq.Application.Services
             _logger = logger;
         }
 
-        public async Task<OperationResult<int>> CreateBrand(BrandDto brandDto)
+        public async Task<OperationResult<int>> AddBrand(BrandDto brandDto)
         {
            
 
             try
             {
                 var brand = _mapper.Map<Brand>(brandDto);
-                var newId =  await _brandRepository.CreateBrand(brand);
+                var newId =  await _brandRepository.AddBrand(brand);
 
                 _logger.LogInformation("Brand Created With Id : {Id} Successfuly", newId);
                 return OperationResult<int>.Success(newId);
@@ -70,7 +70,7 @@ namespace TechSouq.Application.Services
 
 
 
-        public async Task<OperationResult<BrandDto>> ReadBrand(int brandId)
+        public async Task<OperationResult<BrandDto>> GetBrand(int brandId)
         {
 
             if(brandId <= 0)
@@ -81,7 +81,7 @@ namespace TechSouq.Application.Services
 
             try
             {
-                var result = await _brandRepository.ReadBrand(brandId);
+                var result = await _brandRepository.GetBrand(brandId);
 
                 if(result == null)
                 {

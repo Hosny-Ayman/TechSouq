@@ -24,12 +24,12 @@ namespace TechSouq.Application.Services
             _logger = logger;
         }
 
-        public async Task<OperationResult<int>> CreateCart(CartDto cartDto)
+        public async Task<OperationResult<int>> AddCart(CartDto cartDto)
         {
             try
             {
                 var Cart = _mapper.Map<Cart>(cartDto);
-                var newId = await _cartIRepository.CreateCart(Cart);
+                var newId = await _cartIRepository.AddCart(Cart);
 
                 if(newId <=0)
                 {
@@ -49,7 +49,7 @@ namespace TechSouq.Application.Services
            
         }
 
-        public async Task<OperationResult<CartDto>> ReadCart(int CartId)
+        public async Task<OperationResult<CartDto>> GetCart(int CartId)
         {
             if (CartId <= 0)
             {
@@ -60,7 +60,7 @@ namespace TechSouq.Application.Services
 
             try
             {
-                var result = await _cartIRepository.ReadCart(CartId);
+                var result = await _cartIRepository.GetCart(CartId);
 
                 if(result == null)
                 {

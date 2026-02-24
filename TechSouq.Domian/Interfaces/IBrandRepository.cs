@@ -10,9 +10,9 @@ namespace TechSouq.Domian.Interfaces
     public interface IBrandRepository
     {
 
-        Task <int> CreateBrand (Brand brand);
+        Task <int> AddBrand (Brand brand);
 
-        Task<Brand> ReadBrand(int BrandId);
+        Task<Brand> GetBrand(int BrandId);
 
         Task <bool> UpdateBrand(Brand brand);
 

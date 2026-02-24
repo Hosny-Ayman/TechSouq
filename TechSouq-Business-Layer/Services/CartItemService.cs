@@ -24,7 +24,7 @@ namespace TechSouq.Application.Services
             _logger = Logger;
         }
 
-        public async Task<OperationResult<int>> CreatCartItem(CartItemDto cartItemdto)
+        public async Task<OperationResult<int>> AddCartItem(CartItemDto cartItemdto)
         {
            
 
@@ -32,39 +32,40 @@ namespace TechSouq.Application.Services
 
             try
             {
-                var newId = await _CartItemRepository.CreateCartItem(cartItem);
+                var newId = await _CartItemRepository.AddCartItem(cartItem);
 
-                _logger.LogInformation($"Item added Successfully. ProductId: ${cartItemdto.ProductId}");
+                _logger.LogInformation("Item added Successfully. ProductId: {ProductId}", cartItemdto.ProductId);
 
                 return OperationResult<int>.Success(newId, $"Cart Items Added Successfully");
                
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to add item. ProductId: {cartItemdto.ProductId}");
+                _logger.LogError(ex, "Failed to add item. ProductId: {ProductId}", cartItemdto.ProductId);
 
                 return OperationResult<int>.Failure($"Failed to add item. ProductId: {cartItemdto.ProductId}");
             }
            
         }
 
-        public async Task<OperationResult< List<CartItemDto>>> ReadCartItems(int CartId)
+        public async Task<OperationResult< List<CartItemDto>>> GetCartItems(int CartId)
         {
             if (CartId <= 0)
             {
+                _logger.LogWarning("User Try To Add CartId: {CartId}", CartId);
+
                 return OperationResult<List<CartItemDto>>.BadRequest("Invalid Data", new List<string> { $"Invalid Cart ID: {CartId}" });
 
-                _logger.LogWarning($"User Try To Add CartId: {CartId}");
             }
           
-            var result = await _CartItemRepository.ReadCartItems(CartId);
+            var result = await _CartItemRepository.GetCartItems(CartId);
 
 
             if (result == null || !result.Any())
             {
-                return OperationResult<List<CartItemDto>>.NotFound("Cart not found");
 
-                _logger.LogWarning($"No Items Found With CartId: {CartId}");
+                _logger.LogWarning("No Items Found With CartId: {CartId}", CartId);
+                return OperationResult<List<CartItemDto>>.NotFound("Cart not found");
 
             }
 
@@ -88,20 +89,40 @@ namespace TechSouq.Application.Services
             {
                 var result = await _CartItemRepository.UpdateCartItems(ctList);
 
-                _logger.LogInformation($"Successfully updated {ctList.Count} cart items.");
+                _logger.LogInformation("Successfully updated {Count} cart items.", ctList.Count);
 
                 return OperationResult<bool>.Success(result);
             }
 
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to update {ctList.Count} cart items.");
+                _logger.LogError(ex, "Failed to update {Count} cart items.", ctList.Count);
 
                 return OperationResult<bool>.Failure("Update Failed Try Later");
             }
 
+        }
 
+        public async Task<OperationResult<bool>> DeleteCartItems(int CartId)
+        {
+            if (CartId <= 0)
+            {
+                _logger.LogWarning("Delete CartItem With Id : {CartId} Invalid", CartId);
+                return OperationResult<bool>.BadRequest("Invalid Data", new List<string> { $"Invalid CartItemId {CartId}" });
+            }
+            try
+            {
+                var result = await _CartItemRepository.DeleteCartItem(CartId);
 
+                _logger.LogInformation("Delete CartItem With Id : {CartId} Successfully", CartId);
+                return OperationResult<bool>.Success(result);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Delete CartItem With Id : {CartId} Failed", CartId);
+                return OperationResult<bool>.Failure("Delete CartItem Failed Try Later");
+            }
 
         }
     }

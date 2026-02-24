@@ -19,7 +19,7 @@ namespace TechSouq.Infrastructure.Repositories
             _Context = context;
         }
 
-        public async Task <int>  CreateAddress(Address address)
+        public async Task <int>  AddAddress(Address address)
         {
              _Context.Addresses.Add(address);
 
@@ -36,7 +36,7 @@ namespace TechSouq.Infrastructure.Repositories
             return Rowseffected > 0;
         }
 
-        public async Task <ICollection<Address>> ReadAddresses(int UserId)
+        public async Task <ICollection<Address>> GetAddresses(int UserId)
         {
            
             var address = await _Context.Addresses.AsNoTracking().Where(x=>x.UserId == UserId).ToListAsync();
